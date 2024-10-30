@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+	<script>
+		function validarDatas() {
+					const dataSaida = new Date(document.getElementById("dataSaida").value);
+					const dataDevolucao = document.getElementById("dataDevolucao") ? new Date(document.getElementById("dataDevolucao").value) : null;
+			
+					if (dataDevolucao && dataDevolucao < dataSaida) {
+						alert("A data de devolução não pode ser anterior à data de saída.");
+						return false;
+					}
+					return true;
+				}
+	</script>
+
+	<title>BibliotecaGSWEB</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+	<div class="container">
+		<h1>Registrar Devolução</h1>
+		<form th:action="@{/emprestimos/devolucao}" th:object="${emprestimo}" method="post" onsubmit="return validarDatas()">
+			<input type="hidden" th:field="*{codEmprestimo}" />
+
+			<div class="form-group">
+				<label for="codEmprestimo">Código do Empréstimo</label>
+				<input type="text" th:field="*{codEmprestimo}" class="form-control" id="codEmprestimo" readonly>
+			</div>
+			<div class="form-group">
+				<label for="cpfCliente">CPF do Cliente</label>
+				<input type="text" th:value="${emprestimo.cliente.cpf}" class="form-control" id="cpfCliente" readonly>
+			</div>
+			<div class="form-group">
+				<label for="dataSaida">Data de Saída</label>
+				<input type="text" th:field="*{dataSaida}"
+					th:value="${#dates.format(emprestimo.dataSaida, 'dd/MM/yyyy')}" class="form-control" id="dataSaida"
+					readonly>
+			</div>
+			<div class="form-group">
+				<label for="dataDevolucaoPrevista">Data de Devolução Prevista</label>
+				<input type="text" th:field="*{dataDevolucaoPrevista}"
+					th:value="${#dates.format(emprestimo.dataDevolucaoPrevista, 'dd/MM/yyyy')}" class="form-control"
+					id="dataDevolucaoPrevista" readonly>
+			</div>
+			<div class="form-group">
+				<label for="dataDevolucao">Data de Devolução</label>
+				<input type="date" th:field="*{dataDevolucao}" class="form-control" id="dataDevolucao" required>
+			</div>
+			<button type="submit" class="btn btn-primary">Registrar Devolução</button>
+			<a th:href="@{/emprestimos}" class="btn btn-secondary">Cancelar</a>
+		</form>
+	</div>
+</body>
+
+</html>

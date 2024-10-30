@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>BibliotecaGSWEB</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+	<div class="container">
+		<header class="mb-4">
+			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<div class="container-fluid">
+					<a class="navbar-brand" href="/livros">BibliotecaGSWEB</a>
+					<div class="collapse navbar-collapse">
+						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{/emprestimos}">Empréstimos</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</header>
+		<h1>Lista de Clientes</h1>
+		<a th:href="@{/clientes/createCliente}" class="btn btn-primary mb-3">Adicionar Novo Cliente</a>
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>CPF</th>
+					<th>Nome</th>
+					<th>Data de Nascimento</th>
+					<th>Cidade</th>
+					<th>UF</th>
+					<th>Telefone</th>
+					<th>Email</th>
+					<th>Ações</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="cliente : ${clientes}">
+					<td th:text="${cliente.cpf}"></td>
+					<td th:text="${cliente.nome}"></td>
+					<td th:text="${#dates.format(cliente.dataDeNascimento, 'dd/MM/yyyy')}"></td>
+					<td th:text="${cliente.endereco.cidade}"></td>
+					<td th:text="${cliente.endereco.uf}"></td>
+					<td th:text="${cliente.contato.telefone}"></td>
+					<td th:text="${cliente.contato.email}"></td>
+					<td>
+						<a th:href="@{'/clientes/editar/'+${cliente.cpf}}" class="btn btn-warning btn-sm">Editar</a>
+						<a th:href="@{'/clientes/excluir/'+${cliente.cpf}}" class="btn btn-danger btn-sm">Excluir</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+
+</html>

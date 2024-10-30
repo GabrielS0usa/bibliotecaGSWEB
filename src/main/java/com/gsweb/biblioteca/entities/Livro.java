@@ -92,4 +92,12 @@ public class Livro implements Serializable{
 		return Objects.equals(isbn, other.isbn);
 	}	
 	
+	public void emprestar() {
+		setExemplares(exemplares - 1);
+	}
+	
+	public void devolver() {
+		setExemplares(exemplares + 1);
+	}
+	
 }

@@ -2,8 +2,13 @@ package com.gsweb.biblioteca.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,8 +31,14 @@ public class Emprestimo implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codEmprestimo;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dataSaida;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dataDevolucaoPrevista;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dataDevolucao;
 	private Double multaAtraso;
 	
@@ -91,13 +102,14 @@ public class Emprestimo implements Serializable{
 		this.dataDevolucaoPrevista = dataDevolucaoPrevista;
 	}
 
-	public Set<Livro> getLivro() {
+	public Set<Livro> getLivros() {
 		return livros;
 	}
 
-	public void setLivro(Livro livro) {
-		this.livros.add(livro);
+	public void setLivros(List<Livro> livros) {
+		this.livros = new HashSet<>(livros);
 	}
+	
 	@JsonIgnore
 	public User getCliente() {
 		return cliente;
@@ -122,6 +134,14 @@ public class Emprestimo implements Serializable{
 			return false;
 		Emprestimo other = (Emprestimo) obj;
 		return Objects.equals(codEmprestimo, other.codEmprestimo);
+	}
+	
+	public void calcularMulta() {
+		if (dataDevolucao != null) {
+			long diferencaEmMilissegundos = dataDevolucao.getTime() - dataDevolucaoPrevista.getTime();
+			long dias = TimeUnit.DAYS.convert(diferencaEmMilissegundos, TimeUnit.MILLISECONDS);
+			setMultaAtraso(1.5 * dias);
+		} 
 	}
 
 }

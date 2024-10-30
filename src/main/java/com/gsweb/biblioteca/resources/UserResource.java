@@ -1,60 +1,65 @@
 package com.gsweb.biblioteca.resources;
 
-import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.gsweb.biblioteca.entities.User;
 import com.gsweb.biblioteca.services.UserService;
 
-@RestController
-@RequestMapping(value = "/cliente")
+@Controller
+@RequestMapping(value = "/clientes")
 public class UserResource {
 	
 	@Autowired
 	private UserService service;
 	
 	@GetMapping
-	public ResponseEntity<List<User>> findAll() {
-		List<User> list = service.findAll();
-		return ResponseEntity.ok().body(list);
+	public ModelAndView listarUsuarios() {
+	    List<User> clientes = service.findAll();
+	    ModelAndView mv = new ModelAndView("Cliente/clientes");
+	    mv.addObject("clientes", clientes);
+	    return mv;
 	}
 	
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<User> findById(@PathVariable String id) {
-		User obj = service.findbyId(id);
-		return ResponseEntity.ok().body(obj);
+	@GetMapping("/createCliente")
+	public ModelAndView createClienteNovo() {
+	    ModelAndView mv = new ModelAndView("Cliente/createCliente");
+	    mv.addObject("cliente", new User());
+	    return mv;
 	}
 	
-	@PostMapping
-	public ResponseEntity<User> insert(@RequestBody User obj) {
-		obj = service.insert(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getCpf()).toUri();
-		return ResponseEntity.created(uri).body(obj);
+	@PostMapping("/createCliente")
+	public String createCliente(User cliente) {
+		service.insert(cliente);
+		return "redirect:/clientes";
 	}
 	
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Void> delete(@PathVariable String id) {
-		service.delete(id);
-		return ResponseEntity.noContent().build();
+	@PostMapping("/atualizar")
+	public String atualizar(User user) {
+		service.update(user.getCpf(), user);
+		return "redirect:/clientes";
 	}
 	
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<User> update(@PathVariable String id, @RequestBody User obj) {
-		obj = service.update(id, obj);
-		return ResponseEntity.ok(obj);
+	@GetMapping("/editar/{cpf}")
+	public ModelAndView edit(@PathVariable("cpf") String cpf) {
+		ModelAndView mv = new ModelAndView("Cliente/atualizarCliente");
+		User UserFind = service.findbyId(cpf);
+		mv.addObject("cliente", UserFind);
+		return mv;
 	}
 	
-	
+	@GetMapping("/excluir/{cpf}")
+	public String deletar(@PathVariable("cpf") String cpf) {
+		service.delete(cpf);
+		return "redirect:/clientes";
+	}
 }

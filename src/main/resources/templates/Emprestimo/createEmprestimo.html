@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>BibliotecaGSWEB</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script>
+		function filtrarLivros() {
+			let input = document.getElementById("livroPesquisa").value.toLowerCase();
+			let livros = document.getElementsByClassName("livro-item");
+
+			for (let i = 0; i < livros.length; i++) {
+				let label = livros[i].querySelector("label").innerText.toLowerCase();
+				livros[i].style.display = label.includes(input) ? "" : "none";
+			}
+		}
+
+		function filtrarClientes() {
+			let input = document.getElementById("clientePesquisa").value.toLowerCase();
+			let clientes = document.getElementsByClassName("cliente-item");
+
+			for (let i = 0; i < clientes.length; i++) {
+				let label = clientes[i].querySelector("label").innerText.toLowerCase();
+				clientes[i].style.display = label.includes(input) ? "" : "none";
+			}
+		}
+
+		function validarDatas() {
+			const dataSaida = new Date(document.getElementById("dataSaida").value);
+			const dataDevolucaoPrevista = new Date(document.getElementById("dataDevolucaoPrevista").value);
+			
+			if (dataDevolucaoPrevista < dataSaida) {
+				alert("A data de devolução prevista não pode ser anterior à data de saída.");
+				return false;
+			}
+
+			return true;
+		}
+	</script>
+</head>
+
+<body>
+	<div class="container">
+		<h1>Adicionar Empréstimo</h1>
+		<form th:action="@{/emprestimos/createEmprestimo}" th:object="${emprestimo}" method="post" onsubmit="return validarDatas()">
+			<div class="form-group">
+				<label for="dataSaida">Data de Saída</label>
+				<input type="date" th:field="*{dataSaida}" class="form-control" id="dataSaida" required>
+			</div>
+			<div class="form-group">
+				<label for="dataDevolucaoPrevista">Data de Devolução Prevista</label>
+				<input type="date" th:field="*{dataDevolucaoPrevista}" class="form-control" id="dataDevolucaoPrevista"
+					required>
+			</div>
+			<div class="form-group">
+				<label for="clientePesquisa">Pesquisar Cliente</label>
+				<input type="text" id="clientePesquisa" class="form-control"
+					placeholder="Digite o nome ou CPF do cliente" onkeyup="filtrarClientes()">
+			</div>
+
+			<div class="form-group">
+				<label>Clientes</label>
+				<div id="listaClientes"
+					style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+					<div th:each="cliente : ${usuarios}" class="form-check cliente-item">
+						<input type="radio" th:field="*{cliente.cpf}" th:value="${cliente.cpf}" class="form-check-input"
+							id="cliente-radio-${cliente.cpf}">
+						<label th:for="'cliente-radio-' + ${cliente.cpf}" class="form-check-label">
+							<span th:text="${cliente.nome + ' (CPF: ' + cliente.cpf + ')'}"></span>
+						</label>
+					</div>
+				</div>
+				<small class="form-text text-muted">Selecione um cliente desejado.</small>
+			</div>
+
+			<div class="form-group">
+				<label for="livroPesquisa">Pesquisar Livro</label>
+				<input type="text" id="livroPesquisa" class="form-control"
+					placeholder="Digite o título ou ISBN do livro" onkeyup="filtrarLivros()">
+			</div>
+
+			<div class="form-group">
+				<label>Livros</label>
+				<div id="listaLivros"
+					style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+					<div th:each="livro : ${livros}" class="form-check livro-item">
+						<input type="checkbox" th:field="*{livros}" th:value="${livro.isbn}" class="form-check-input"
+							id="livro-checkbox-${livro.isbn}">
+						<label th:for="'livro-checkbox-' + ${livro.isbn}" class="form-check-label">
+							<span
+								th:text="${livro.titulo + ' (' + livro.isbn + ') - Exemplares: ' + livro.exemplares}"></span>
+						</label>
+					</div>
+				</div>
+				<small class="form-text text-muted">Selecione os livros desejados.</small>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Adicionar Empréstimo</button>
+			<a th:href="@{/emprestimos}" class="btn btn-secondary">Cancelar</a>
+		</form>
+	</div>
+</body>
+
+</html>

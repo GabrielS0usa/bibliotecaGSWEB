@@ -26,14 +26,14 @@ public class Endereco {
 	@JoinColumn(name = "cpf_cliente", referencedColumnName = "cpf")
 	private User cliente;
 	
-	public Endereco() {
-	}
-
 	public Endereco(String cep, Integer numero, String cidade, String uf, String cpfCliente) {
 		this.cep = cep;
 		this.numeroResidencia = numero;
 		this.cidade = cidade;
 		this.uf = uf;
+	}
+	
+	public Endereco() {
 	}
 
 	public String getCidade() {
@@ -66,6 +66,14 @@ public class Endereco {
 
 	public void setNumeroResidencia(Integer numeroResidencia) {
 		this.numeroResidencia = numeroResidencia;
+	}
+
+	public User getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(User cliente) {
+		this.cliente = cliente;
 	}
 
 	@Override

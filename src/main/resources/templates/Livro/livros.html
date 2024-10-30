@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>BibliotecaGSWEB</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+		<header class="mb-4">
+		            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+		                <div class="container-fluid">
+		                    <a class="navbar-brand" href="/livros">BibliotecaGSWEB</a>
+		                    <div class="collapse navbar-collapse">
+		                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+		                            <li class="nav-item">
+		                                <a class="nav-link" th:href="@{/emprestimos}">Empréstimos</a>
+		                            </li>
+		                            <li class="nav-item">
+		                                <a class="nav-link" th:href="@{/clientes}">Clientes</a>
+		                            </li>
+		                        </ul>
+		                    </div>
+		                </div>
+		            </nav>
+		        </header>
+        <h1>Lista de Livros</h1>
+        <a th:href="@{/livros/create}" class="btn btn-primary mb-3">Adicionar Novo Livro</a>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ISBN</th>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Editora</th>
+                    <th>Exemplares</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="livro : ${livros}">
+                    <td th:text="${livro.isbn}"></td>
+                    <td th:text="${livro.titulo}"></td>
+                    <td th:text="${livro.autor}"></td>
+                    <td th:text="${livro.editora}"></td>
+                    <td th:text="${livro.exemplares}"></td>
+                    <td>
+                        <a th:href="@{'/livros/editar/'+${livro.isbn}}" class="btn btn-warning btn-sm">Editar</a>
+                        <a th:href="@{'/livros/excluir/'+${livro.isbn}}" class="btn btn-danger btn-sm">Excluir</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

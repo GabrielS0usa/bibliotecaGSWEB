@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>BibliotecaGSWEB</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Adicionar Livro</h1>
+        <form th:action="@{/livros/create}" th:object="${livro}" method="post">
+			
+            <div class="form-group">
+                <label for="isbn">ISBN</label>
+                <input type="text" th:field="*{isbn}" class="form-control" id="isbn" placeholder="Digite o ISBN" required>
+            </div>
+            <div class="form-group">
+                <label for="titulo">Título</label>
+                <input type="text" th:field="*{titulo}" class="form-control" id="titulo" placeholder="Digite o título" required>
+            </div>
+            <div class="form-group">
+                <label for="autor">Autor</label>
+                <input type="text" th:field="*{autor}" class="form-control" id="autor" placeholder="Digite o autor" required>
+            </div>
+            <div class="form-group">
+                <label for="editora">Editora</label>
+                <input type="text" th:field="*{editora}" class="form-control" id="editora" placeholder="Digite a editora" required>
+            </div>
+            <div class="form-group">
+                <label for="exemplares">Exemplares</label>
+                <input type="number" th:field="*{exemplares}" class="form-control" id="exemplares" placeholder="Digite a quantidade de exemplares" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Adicionar Livro</button>
+            <a th:href="@{/livros}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</body>
+</html>

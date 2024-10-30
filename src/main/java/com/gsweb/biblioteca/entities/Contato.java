@@ -10,7 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -26,12 +25,12 @@ public class Contato implements Serializable {
 	private String telefone;
 	private String email;
 	
+	public Contato() {
+	}
+	
 	@OneToOne
 	@JoinColumn(name = "cpf_cliente", referencedColumnName = "cpf")
 	private User cliente;
-	
-	public Contato() {
-	}
 
 	public Contato(String telefone, String email, User cliente) {
 		this.telefone = telefone;

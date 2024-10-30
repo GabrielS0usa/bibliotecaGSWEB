@@ -32,20 +32,20 @@ public class UserService {
 	}
 	
 	public User insert(User obj) {
+		setData(obj);
 		return repository.save(obj);
 	}
 	
 	public void delete(String id) {
-		try {
-			if (repository.existsById(id)) {
-				repository.deleteById(id);
-			} 
-			throw new EmptyResultDataAccessException(0);
-		} catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException(id);
-		} catch (DataIntegrityViolationException e) {
-			throw new DatabaseException(e.getMessage());
-		}
+	    try {
+	        if (repository.existsById(id)) {
+	            repository.deleteById(id);
+	        } else {
+	            throw new ResourceNotFoundException(id);
+	        }
+	    } catch (DataIntegrityViolationException e) {
+	        throw new DatabaseException(e.getMessage());
+	    }
 	}
 	
 	public User update(String id, User obj) {
@@ -66,7 +66,13 @@ public class UserService {
 		entity.getEndereco().setUf(obj.getEndereco().getUf());
 		entity.getEndereco().setCep(obj.getEndereco().getCep());
 		entity.getEndereco().setNumeroResidencia(obj.getEndereco().getNumeroResidencia());
-		
+		entity.getEndereco().setCliente(obj);
+		entity.getContato().setCliente(obj);
 	}
 	
+	private User setData(User obj) {
+		obj.getContato().setCliente(obj);
+		obj.getEndereco().setCliente(obj);
+		return obj;
+	}
 }

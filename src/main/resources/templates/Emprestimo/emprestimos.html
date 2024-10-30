@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>BibliotecaGSWEB</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+	<div class="container">
+		<header class="mb-4">
+			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<div class="container-fluid">
+					<a class="navbar-brand" href="/livros">BibliotecaGSWEB</a>
+					<div class="collapse navbar-collapse">
+						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{/clientes}">Clientes</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</header>
+		<h1>Lista de Empréstimos</h1>
+		<a th:href="@{/emprestimos/createEmprestimo}" class="btn btn-primary mb-3">Criar Novo Empréstimo</a>
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>ID Empréstimo</th>
+					<th>Data de Saída</th>
+					<th>Data de Devolução Prevista</th>
+					<th>Data de Devolução</th>
+					<th>Multa Atraso</th>
+					<th>CPF do Cliente</th>
+					<th>Nome do Cliente</th>
+					<th>Livros</th>
+					<th>Ações</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="emprestimo : ${emprestimos}">
+					<td th:text="${emprestimo.codEmprestimo}"></td>
+					<td th:text="${#dates.format(emprestimo.dataSaida, 'dd/MM/yyyy')}"></td>
+					<td th:text="${#dates.format(emprestimo.dataDevolucaoPrevista, 'dd/MM/yyyy')}"></td>
+					<td
+						th:text="${emprestimo.dataDevolucao != null ? #dates.format(emprestimo.dataDevolucao, 'dd/MM/yyyy') : 'Não devolvido'}">
+					</td>
+					<td
+						th:text="${emprestimo.multaAtraso != null ? 'R$ ' + #numbers.formatDecimal(emprestimo.multaAtraso, 2, 2) : 'R$ 0,00'}">
+					</td>
+					<td th:text="${emprestimo.cliente.cpf}"></td>
+					<td th:text="${emprestimo.cliente.nome}"></td>
+					<td>
+						<ul class="list-unstyled">
+							<li th:each="livro : ${emprestimo.livros}" class="mb-1">
+								<strong>ISBN:</strong> <span th:text="${livro.isbn}"></span> <br>
+								<strong>Título:</strong> <span th:text="${livro.titulo}"></span>
+								<hr th:if="${#lists.size(emprestimo.livros) > 1}" />
+							</li>
+						</ul>
+					</td>
+					<td style="white-space: nowrap;">
+						<a th:href="@{'/emprestimos/devolucao/' + ${emprestimo.codEmprestimo}}"
+							class="btn btn-success btn-sm" th:disabled="${emprestimo.dataDevolucao != null}"
+							th:classappend="${emprestimo.dataDevolucao != null} ? 'disabled' : ''">
+							Devolução
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+
+</html>

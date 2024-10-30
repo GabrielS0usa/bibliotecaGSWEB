@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -21,6 +23,8 @@ public class User implements Serializable {
 	@Id
 	private String cpf;
 	private String nome;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dataDeNascimento;
 	
 	@OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
@@ -30,7 +34,7 @@ public class User implements Serializable {
 	private Endereco endereco;
 	
 	
-	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cliente")
 	private Set<Emprestimo> emprestimos;
 	
 	public User() {
