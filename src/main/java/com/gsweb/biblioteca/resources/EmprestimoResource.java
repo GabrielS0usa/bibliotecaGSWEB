@@ -25,7 +25,7 @@ import com.gsweb.biblioteca.services.LivroService;
 import com.gsweb.biblioteca.services.UserService;
 
 @Controller
-@RequestMapping(value = "/emprestimos")
+@RequestMapping("/emprestimos")
 public class EmprestimoResource {
 	
 	@Autowired

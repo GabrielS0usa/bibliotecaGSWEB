@@ -16,7 +16,7 @@ import com.gsweb.biblioteca.entities.User;
 import com.gsweb.biblioteca.services.UserService;
 
 @Controller
-@RequestMapping(value = "/clientes")
+@RequestMapping("/clientes")
 public class UserResource {
 	
 	@Autowired
